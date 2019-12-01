@@ -1,5 +1,6 @@
-//network.js - отвечает за взаимодействие с сетью
+//network.js - отвечает за взаимодействие с сетью. Кода немного, ибо большая часть работы выполняется на сервере.
 
+//будьте осторожней, если неправильно настроить реконнект, то можно положить роутер, удачи <3 
 import io from 'socket.io-client';
 const functions = require("./functions");
 const restoreDesktop = require("./restoreDesktop");
@@ -8,13 +9,7 @@ function GetConnection(socket){
     socket.on("connected",function(data){
         constructor.connected = true;
         constructor.room = data.roomName;
-        socket.on('disconnect', (reason) => {
-            if (reason === 'io server disconnect') {
-              // the disconnection was initiated by the server, you need to reconnect manually
-              socket.connect();
-            }
-            // else the socket will automatically try to reconnect
-        });
+        
         socket.on("restore-desktop",function(){
             
             console.log(constructor.restore);
@@ -27,13 +22,33 @@ function GetConnection(socket){
                         restoreDesktop(settings.defaultDesktop,function(){
                             resolve();
                         });
-                    }) 
-                    constructor.restore = false;
-                    socket.connect();
+                    })
+                    await new Promise((resolve,reject)=>{
+                        console.log("after restore");
+                        constructor.restore = false;
+                        /*setTimeout(()=>{
+                            constructor.startConnection();
+                        },1500);*/
+                        console.log("network restore complete!");
+                        resolve();
+                    })
                 })()
             }   
             
         });
+        socket.on('disconnect', (reason) => {
+            console.log("Disconnect: ",reason);
+            setTimeout(()=>{
+                socket.disconnect();
+                constructor.startConnection();
+            },1500);
+        });
+        /*socket.on('error', (error) => {
+            console.log("Error: ",error);
+            setTimeout(()=>{
+                constructor.startConnection();
+            },1500);
+        });*/
     })
 }
 

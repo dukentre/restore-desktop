@@ -189,7 +189,7 @@ module.exports = (desktopId,callback)=>{
                         
                         for (var i=0; i<items.length; i++) {
                             try{
-                                console.log(items[i]);
+                                //console.log(items[i]);
                                 if(!fs.existsSync(desktopPath+items[i]) && !fs.existsSync("C:\\Users\\Public\\Desktop\\"+items[i])){//если файла нет на рабочем столе
                                     if(desktops.saves[desktopId].files[items[i]] !== 'folder'){//если это не папка
                                         if(settings.checkMD5){//если есть проверка md5
@@ -284,7 +284,8 @@ module.exports = (desktopId,callback)=>{
                             }, 
                             function(err, resultList ) {
                                 if (err) {
-                                    throw new Error( err );
+                                    console.log(err);
+                                    //throw new Error( err );
                                 }
                                 console.log(resultList.length);
                                 if(resultList.length !== 0){//если проводник запущен
@@ -294,7 +295,8 @@ module.exports = (desktopId,callback)=>{
                                         try{
                                             ps.kill( finded_process.pid,"SIGKILL", function( err ) {//убиваем проводник нахуй
                                                 if (err) {
-                                                    throw new Error( err );
+                                                    console.log(err);
+                                                    //throw new Error( err );
                                                 }
                                                 else {
                                                     console.log( 'Process %s has been killed without a clean-up!',finded_process.pid );
@@ -331,9 +333,9 @@ module.exports = (desktopId,callback)=>{
                             console.log("Начали загружать данные в регистр");
                             
                             //let goNEXT = resolve();
-                            console.log(app.getPath("userData")+"\\savedDesktops\\"+desktopId+"\\reg\\desktop/");//последний слэш очень важен!
+                            //console.log(app.getPath("userData")+"\\savedDesktops\\"+desktopId+"\\reg\\desktop/");//последний слэш очень важен!
                             uploadDesktopRegistry(app.getPath("userData")+"\\savedDesktops\\"+desktopId+"\\reg\\desktop/", (error, result) => {
-                                if (error) throw error;
+                                if (error) console.log(error);
                                 console.log("desktop registry uploaded!");
                                 resolve();
                             });
@@ -342,14 +344,17 @@ module.exports = (desktopId,callback)=>{
                     let six = await new Promise((resolve,reject) =>{
                         console.log("Запускаем проводник");
                         exec('explorer.exe', function(err, data) { //запускаем проводник 
-                            console.log(err)
-                            console.log(data.toString()); 
-                            if(typeof(callback) == 'function'){
-                                callback();
-                            }                     
-                        });  
+                                           
+                        });
+                        resolve();   
                     });
+                     
                 }
+                console.log("Проводник запущен!",typeof(callback));
+                if(typeof(callback) == 'function'){
+                    console.log("CALLBACK!!!!!!!!!!!");
+                    callback();
+                }  
                 
             }catch(e){
                 console.log(e);

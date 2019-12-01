@@ -67,7 +67,7 @@ export default {
             this.$electron.ipcRenderer.send('change-room',{serverName:this.serverEdit,roomName:this.roomEdit});
             this.checkConnectionTime = setTimeout(()=>{
                 this.$electron.ipcRenderer.send('network-get');
-            },1500)
+            },3500)
         },
         leaveFromRoom(){
             this.$electron.ipcRenderer.send('leave-room');
