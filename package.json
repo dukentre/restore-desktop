@@ -56,7 +56,7 @@
     "axios": "^0.18.0",
     "electron-debug": "^1.5.0",
     "electron-edge-js": "^12.4.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "md5-file": "^4.0.0",
     "ncp": "^2.0.0",
     "npm": "^6.13.1",
